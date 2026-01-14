@@ -328,11 +328,11 @@ export default function ComponentQuickEdit() {
             // Add the new component
             return {
                 ...prevState,
-                // components: [
-                //     ...prevState.components,
-                //     component
-                // ]
-            };
+                components: [
+                    ...prevState.components,
+                    component
+                ]
+            } as HoloUIData;
         });
     }
 
@@ -460,14 +460,14 @@ export default function ComponentQuickEdit() {
                         Edit Component
                     </button>
                 </Column>
-                {/* <Column
+                <Column
                     xs={24}
                 >
                     <div onClick={handleSave} className={styles.saveButton}>
                         <BiSave/>
                         Save Changes
                     </div>
-                </Column> */}
+                </Column>
             </Row>
         </div>
     )
