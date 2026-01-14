@@ -8,13 +8,13 @@ export default function Header() {
                 <div className={styles.brandImage}>
                     <Image
                         src={"/logo.svg"}
-                        alt={"StudioArchetype Logo"}
+                        alt={"Volmit Software Logo"}
                         fill
                     />
                 </div>
                 <div className={styles.brandName}>
                     <h1>
-                        <span>Studio</span>Archetype
+                        <span>Volmit</span>Software
                     </h1>
                 </div>
             </a>

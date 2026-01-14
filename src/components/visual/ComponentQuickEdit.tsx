@@ -1,7 +1,10 @@
 import Row from "@/components/grid/Row";
 import Column from "@/components/grid/Column";
 import styles from "@/styles/components/visual/ComponentQuickEdit.module.scss";
-import {type HoloUIComponent, type HoloUIData, ModalData} from "@/util/types";
+import type {HoloUIComponent, HoloUIButtonData, HoloUIIcon, HoloUIData, HoloUIAction, ModalData, HoloUITextIcon, HoloUIItemIcon, HoloUITextImageIcon, HoloUICommandAction, HoloUISoundAction} from "@/util/types";
+import IconEditor from "@/components/modal/edit/IconEditor";
+import ActionList from "@/components/modal/action/ActionList";
+import {BiSave} from "react-icons/bi";
 import {type ChangeEvent, useEffect, useState} from "react";
 import {useModal} from "@/hooks/ModalHook";
 import StaticComponentModal from "@/components/modal/edit/type/static/StaticComponentModal";
@@ -182,6 +185,157 @@ export default function ComponentQuickEdit() {
         setModal(getEditStaticModal(component));
     }
 
+    /**
+     * Handle the highlight modifier being updated
+     */
+    function handleHighlightModifierUpdate(value: string) {
+        if (isNaN(Number(value))) {
+            alert("Highlight modifier must be a number");
+            return;
+        }
+
+        setComponent((component) => {
+            if (!component) {
+                return component;
+            }
+
+            return {
+                ...component,
+                data: {
+                    ...component.data,
+                    highlightModifier: Number(value)
+                }
+            }
+        });
+    }
+
+    /**
+     * Handle the icon being updated
+     */
+    function handleIconUpdate(icon: HoloUIIcon) {
+        setComponent((component) => {
+            if (!component) {
+                return component;
+            }
+
+            return {
+                ...component,
+                data: {
+                    ...component.data,
+                    icon
+                }
+            }
+        });
+    }
+
+    /**
+     * Handle the actions being updated
+     *
+     * @param actions The new actions
+     */
+    function handleActionsUpdate(actions: HoloUIAction[]) {
+        setComponent((component) => {
+            if (!component) {
+                return component;
+            }
+
+            return {
+                ...component,
+                data: {
+                    ...component.data,
+                    actions
+                }
+            }
+        });
+    }
+
+    function validateComponent(component: HoloUIComponent | undefined) {
+        const data = component?.data as HoloUIButtonData;
+        const icon = data.icon;
+        if (icon.type === 'text' && (icon as HoloUITextIcon).text === '') {
+            return 'Please fill in the icon text!';
+        }
+
+        if (icon.type === 'item' && (icon as HoloUIItemIcon).item === '') {
+            return 'Please fill in the item ID!';
+        }
+
+        if (icon.type === 'textImage' && (icon as HoloUITextImageIcon).path === '') {
+            return 'Please select an image!';
+        }
+
+        if (data.actions.length === 0) {
+            return 'Please add at least one action!';
+        }
+
+        // Validate actions
+        for (const action of data.actions) {
+            const type = action.type;
+            if (type === "command") {
+                const commandAction = action as HoloUICommandAction;
+                if (commandAction.command === "") {
+                    return 'Please fill in the command!';
+                }
+
+                continue;
+            }
+
+            if (type === "sound") {
+                const soundAction = action as HoloUISoundAction;
+                if (soundAction.sound === "") {
+                    return 'Please fill in the sound!';
+                }
+
+                continue;
+            }
+        }
+
+        return undefined;
+    }
+
+    /**
+     * Handle the save button being clicked
+     */
+    function handleSave() {
+        console.log(`Saving component: ${JSON.stringify(component)}`);
+        // Ensure the ID is not empty
+        if (component?.id === '') {
+            alert('Component ID cannot be empty!');
+            return;
+        }
+
+        // Ensure the ID is not already taken
+        // if (data?.components.find((comp) => comp.id === component?.id)) {
+        //     alert('Component with ID already exists!');
+        //     return;
+        // }
+
+        // Validate the component using the provided function
+        const validate = validateComponent(component);
+        if (validate) {
+            alert(validate);
+            return;
+        }
+
+        setData((prevState) => {
+            if (!prevState) {
+                return prevState;
+            }
+
+            // Remove the old component
+            prevState.components = prevState.components.filter((comp) => comp.id !== component?.id);
+
+            // Add the new component
+            return {
+                ...prevState,
+                // components: [
+                //     ...prevState.components,
+                //     component
+                // ]
+            };
+        });
+    }
+
     return (
         <div className={styles.content}>
             <Row>
@@ -257,6 +411,48 @@ export default function ComponentQuickEdit() {
                 <Column
                     xs={24}
                 >
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="highlight-modifier">
+                            Highlight Modifier
+                        </label>
+                        <input
+                            id="highlight-modifier"
+                            name="highlight-modifier"
+                            type="number"
+                            value={(component.data as HoloUIButtonData).highlightModifier}
+                            onChange={(e) => handleHighlightModifierUpdate(e.target.value)}
+                        />
+                    </div>
+                </Column>
+                <Column
+                    xs={24}
+                >
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="icon-modifier">
+                            Icon
+                        </label>
+                        <IconEditor
+                            currentIcon={(component.data as HoloUIButtonData).icon}
+                            onUpdate={handleIconUpdate}
+                        />
+                    </div>
+                </Column>
+                <Column
+                    xs={24}
+                >
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="actions-modifier">
+                            Actions
+                        </label>
+                        <ActionList
+                            actions={(component.data as HoloUIButtonData).actions}
+                            setActions={(actions) => handleActionsUpdate(actions)}
+                        />
+                    </div>
+                </Column>
+                <Column
+                    xs={24}
+                >
                     <button
                         className={styles.editButton}
                         onClick={() => handleEditComponent()}
@@ -264,6 +460,14 @@ export default function ComponentQuickEdit() {
                         Edit Component
                     </button>
                 </Column>
+                {/* <Column
+                    xs={24}
+                >
+                    <div onClick={handleSave} className={styles.saveButton}>
+                        <BiSave/>
+                        Save Changes
+                    </div>
+                </Column> */}
             </Row>
         </div>
     )

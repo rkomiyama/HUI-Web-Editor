@@ -51,12 +51,12 @@ export const metadata: Metadata = {
         follow: true,
         index: true,
     },
-    creator: "Studio Archetype",
+    creator: "Volmit Software",
     authors: {
-        name: "Studio Archetype",
+        name: "Volmit Software",
         url: "https://studioarchetype.net/",
     },
-    publisher: "Studio Archetype",
+    publisher: "Volmit Software",
 
 }
 

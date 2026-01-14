@@ -18,9 +18,9 @@ export default function AboutModal() {
     return (
         <div className={styles.content}>
             <div className={styles.title}>
-                <h1>HoloHUI Builder</h1>
+                <h1>HoloUI Builder</h1>
                 <h3>
-                    &copy; {new Date().getFullYear()} Studio Archetype, All Rights Reserved.
+                    &copy; {new Date().getFullYear()} Volmit Software, All Rights Reserved.
                 </h3>
             </div>
             <div className={styles.buttons}>
@@ -34,6 +34,8 @@ export default function AboutModal() {
                             GitHub
                         </div>
                     </Column>
+                </Row>
+                <Row center>
                     <Column xs={24} lg={12}>
                         <div
                             className={styles.button}
@@ -43,15 +45,8 @@ export default function AboutModal() {
                             Discord
                         </div>
                     </Column>
-                    <Column xs={24} lg={12}>
-                        <div
-                            className={styles.button}
-                            onClick={() => openLink("https://www.volmit.com/software/hologui")}
-                        >
-                            <BsCurrencyDollar/>
-                            Purchase
-                        </div>
-                    </Column>
+                </Row>
+                <Row center>
                     <Column xs={24} lg={12}>
                         <div
                             className={styles.button}
@@ -60,6 +55,43 @@ export default function AboutModal() {
                             <BiBook/>
                             Documentation
                         </div>
+                    </Column>
+                </Row>
+                <Row center>
+                    <Column xs={24} lg={12}>
+                        <div
+                            className={styles.button}
+                            onClick={() => openLink("https://www.volmit.com/software/hologui")}
+                        >
+                            <BsCurrencyDollar/>
+                            Purchase
+                        </div>
+                        <Row center>
+                            <Column xs={12} lg={6}>
+                                <div
+                                    className={styles.button}
+                                    onClick={() => openLink("https://www.volmit.com/software/hologui")}
+                                >
+                                    Polymart
+                                </div>
+                            </Column>
+                            <Column xs={12} lg={6}>
+                                <div
+                                    className={styles.button}
+                                    onClick={() => openLink("https://www.volmit.com/software/hologui")}
+                                >
+                                    Spigot
+                                </div>
+                            </Column>
+                            <Column xs={12} lg={6}>
+                                <div
+                                    className={styles.button}
+                                    onClick={() => openLink("https://www.volmit.com/software/hologui")}
+                                >
+                                    BuiltByBit
+                                </div>
+                            </Column>
+                        </Row>
                     </Column>
                 </Row>
             </div>
